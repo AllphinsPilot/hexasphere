@@ -15,6 +15,30 @@ A module to create (almost) hexagonal grids on a sphere
 
 to be extended ...
 
+### base polyhedron
+
+The grid is built by subdivising a base polyhedron into hexagon tiles.
+The base polyhedron is an icosahedron, which comprises:
+- 20 faces (equilateral triangles)
+- 12 vertices
+- 30 edges
+At the vertices of the icosahedron, a pentagon is constructed instead of an hexagon.
+
+For a given grid resolution `n` value, each edge of the icosahedron goes through exactly `n` hexagon centers and `2` pentagon centers. The inside of faces is then filled with tile-centers by following a triangular pattern.
+This allows to cover the icosahedron. Its surface is then mapped to the sphere using a projection.
+
+### hexagon tile identifier
+
+A tile identifier has the following pattern:
+```
+?XXXXX-YYYYY-ZZZZZ
+```
+- `?` is one of the 20 letters `A` ... `T`, each letter corresponding to one face of the icosahedron
+- `XXXXX`, `YYYYY`, `ZZZZZ` are the integer coordinates of the tile in the triangular mesh covering face `?`. An useful property holds:
+```
+XXXXX + YYYYY + ZZZZZ = 2 * (n + 1)
+```
+
 ## usage
 
 ### construction of a grid

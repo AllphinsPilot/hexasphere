@@ -6,7 +6,7 @@ from hexasphere.geometry import compute_dist, X_to_latlon, latlon_to_X
 
 
 class HexGrid(Icosahedron):
-    def __init__(self, face_A=None, overlap=0):
+    def __init__(self, face_A=None, overlap: float = 0):
         """
         ### Parameters
 
@@ -28,7 +28,7 @@ class HexGrid(Icosahedron):
             )
         )
 
-    def compute_n_for_radius(self, r):
+    def compute_n_for_radius(self, r: float):
         """
         Computes n (the number of hexes an edge of a face goes through),
         so that the average area of hexagon tiles is equal to the area
@@ -39,7 +39,7 @@ class HexGrid(Icosahedron):
 
         return int(np.round(np.sqrt(nb_h / 10) - 1))
 
-    def compute_radius_for_n(self, n):
+    def compute_radius_for_n(self, n: int):
         """
         Returns the approximative radius of hexes in a grid of resolution n+1
         The radius of an hex is the radius of the circle with an area equal to
@@ -52,7 +52,7 @@ class HexGrid(Icosahedron):
 
         return eq_r
 
-    def compute_n_for_height(self, h):
+    def compute_n_for_height(self, h: float):
         """
         Computes n (the number of hexes an edge of a face goes through),
         so that the average height of hexagon tiles is h (in kilometers)
@@ -62,7 +62,7 @@ class HexGrid(Icosahedron):
 
         return int(np.round(np.sqrt(nb_h / 10) - 1))
 
-    def compute_height_for_n(self, n):
+    def compute_height_for_n(self, n: int):
         """
         Returns the approximative height of hexes in a grid of resolution n+1
         The heigh of an hex is the distance between its center and any of its
@@ -75,7 +75,7 @@ class HexGrid(Icosahedron):
 
         return height
 
-    def compute_n_for_side(self, s):
+    def compute_n_for_side(self, s: float):
         """
         Computes n (the number of hexes an edge of a face goes through),
         so that the average side of hexagon tiles is s (in kilometers)
@@ -85,7 +85,7 @@ class HexGrid(Icosahedron):
 
         return int(np.round(np.sqrt(nb_h / 10) - 1))
 
-    def compute_side_for_n(self, n):
+    def compute_side_for_n(self, n: int):
         """
         Returns the approximative side length of hexes in a grid of resolution
         n+1
@@ -172,7 +172,10 @@ class HexGrid(Icosahedron):
         If True, hexagon parameter must be the string id of hexagon
         """
         if in_str:
-            hexagon = Hexagon(self, str_id=hexagon, res=n + 1)
+            if n is None:
+                hexagon = Hexagon(self, str_id=hexagon)
+            else:
+                hexagon = Hexagon(self, str_id=hexagon, res=n + 1)
         X = self.projection.inv_project(hexagon.get_P(), hexagon.face)
         return X_to_latlon(X)
 
