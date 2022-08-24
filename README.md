@@ -17,27 +17,27 @@ to be extended ...
 
 ### base polyhedron
 
-The grid is built by subdivising a base polyhedron into hexagon tiles.
+The grid is built by subdividing a base polyhedron into hexagon tiles.
 The base polyhedron is an icosahedron, which comprises:
 - 20 faces (equilateral triangles)
 - 12 vertices
 - 30 edges
-At the vertices of the icosahedron, a pentagon is constructed instead of an hexagon.
 
-For a given grid resolution `n` value, each edge of the icosahedron goes through exactly `n` hexagon centers and `2` pentagon centers. The inside of faces is then filled with tile-centers by following a triangular pattern.
+At the vertices of the icosahedron, instead of an hexagon, a pentagon is constructed.
+
+For a given grid resolution `n`, each edge of the icosahedron goes through exactly `n` hexagon centers (not counting the polygons found at the ends). The inside of faces is then filled with tile-centers by following a triangular pattern.
 This allows to cover the icosahedron. Its surface is then mapped to the sphere using a projection.
+
+![icogrid](https://user-images.githubusercontent.com/70936497/186472661-e6255c76-46ae-4ce8-9b13-32c0683ee48b.jpeg)
+*Here, `n = 7`*
 
 ### hexagon tile identifier
 
-A tile identifier has the following pattern:
-```
-?XXXXX-YYYYY-ZZZZZ
-```
-- `?` is one of the 20 letters `A` ... `T`, each letter corresponding to one face of the icosahedron
+A tile identifier has the following pattern: `?XXXXX-YYYYY-ZZZZZ`
+- `?` is one of the 20 letters `A ... T`, each letter corresponding to one face of the icosahedron
 - `XXXXX`, `YYYYY`, `ZZZZZ` are the integer coordinates of the tile in the triangular mesh covering face `?`. An useful property holds:
-```
-XXXXX + YYYYY + ZZZZZ = 2 * (n + 1)
-```
+
+`XXXXX + YYYYY + ZZZZZ = 2 * (n + 1)`
 
 ## usage
 
