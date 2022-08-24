@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from geometry import Projection, phi
+from hexasphere.geometry import Projection, phi
 
 
 class GnomonicProj(Projection):

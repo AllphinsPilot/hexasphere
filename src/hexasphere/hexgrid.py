@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from geometry import Icosahedron, R
+from hexasphere.geometry import Icosahedron, R
 
 
 def latlon_to_X(lat, lon):
@@ -658,7 +658,7 @@ if __name__ == "__main__":
     hexgrid = HexGrid()
     n = hexgrid.compute_n_for_radius(0.25)
 
-    from projection import SnyderEAProj
+    from src.hexasphere.projection import SnyderEAProj
 
     snyder_proj = SnyderEAProj(hexgrid)
     hexgrid.projection = snyder_proj
