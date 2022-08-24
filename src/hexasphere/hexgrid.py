@@ -2,50 +2,7 @@
 import numpy as np
 
 from hexasphere.geometry import Icosahedron, R
-
-
-def latlon_to_X(lat, lon):
-    """
-    Converts latlon cordinates into orthogonal coordinates
-    """
-    lat *= np.pi / 180
-    lon *= np.pi / 180
-
-    X = np.zeros(3)
-    X[0] = np.cos(lat) * np.cos(lon)
-    X[1] = np.cos(lat) * np.sin(lon)
-    X[2] = np.sin(lat)
-
-    return X
-
-
-def X_to_latlon(X):
-    """
-    Converts orthogonal coordinates into latlon coordinates
-    """
-    PX = np.copy(X)
-    PX[2] = 0
-
-    lat = np.arctan2(X[2], np.linalg.norm(PX))
-    if lat == 90 or lat == -90:
-        lon = 0
-    else:
-        lon = np.arctan2(X[1], X[0])
-
-    lat *= 180 / np.pi
-    lon *= 180 / np.pi
-
-    return [lat, lon]
-
-
-def compute_dist(X1, X2, in_latlon=False):
-    """
-    Computes (spherical) distance between UNITARY vectors X1 and X2
-    """
-    if in_latlon:
-        X1 = latlon_to_X(*X1)
-        X2 = latlon_to_X(*X2)
-    return np.arccos(X1.dot(X2)) * R
+from hexasphere.geometry import compute_dist, X_to_latlon, latlon_to_X
 
 
 class HexGrid(Icosahedron):
@@ -118,6 +75,16 @@ class HexGrid(Icosahedron):
 
         return height
 
+    def compute_n_for_side(self, s):
+        """
+        Computes n (the number of hexes an edge of a face goes through),
+        so that the average side of hexagon tiles is s (in kilometers)
+        """
+        h_area = 3 * s**2 * np.sqrt(3) / 2
+        nb_h = (4 * np.pi * R**2) / h_area
+
+        return int(np.round(np.sqrt(nb_h / 10) - 1))
+
     def compute_side_for_n(self, n):
         """
         Returns the approximative side length of hexes in a grid of resolution
@@ -126,9 +93,9 @@ class HexGrid(Icosahedron):
 
         nb_h = 20 * (n + 1) ** 2 / 2
         h_area = (4 * np.pi * R**2) / nb_h
-        height = np.sqrt(2 * h_area * np.sqrt(3) / 9)
+        side = np.sqrt(2 * h_area * np.sqrt(3) / 9)
 
-        return height
+        return side
 
     def rectify_coordinates(self, face, pos, n):
         """
@@ -192,7 +159,7 @@ class HexGrid(Icosahedron):
         # The hex to which the projected point belongs is retrieved
         return location.find_hex(n, out_str)
 
-    def hex_to_latlon(self, hexagon, in_str=False, n=None):
+    def hex_to_latlon(self, hexagon, n=None, in_str=False):
         """
         Returns the (lat, lon) coordinates of the center of the hexagon
 

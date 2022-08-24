@@ -8,6 +8,50 @@ R = 6371
 phi = (1 + np.sqrt(5)) / 2
 
 
+def latlon_to_X(lat, lon):
+    """
+    Converts latlon cordinates into orthogonal coordinates
+    """
+    lat *= np.pi / 180
+    lon *= np.pi / 180
+
+    X = np.zeros(3)
+    X[0] = np.cos(lat) * np.cos(lon)
+    X[1] = np.cos(lat) * np.sin(lon)
+    X[2] = np.sin(lat)
+
+    return X
+
+
+def X_to_latlon(X):
+    """
+    Converts orthogonal coordinates into latlon coordinates
+    """
+    PX = np.copy(X)
+    PX[2] = 0
+
+    lat = np.arctan2(X[2], np.linalg.norm(PX))
+    if lat == 90 or lat == -90:
+        lon = 0
+    else:
+        lon = np.arctan2(X[1], X[0])
+
+    lat *= 180 / np.pi
+    lon *= 180 / np.pi
+
+    return [lat, lon]
+
+
+def compute_dist(X1, X2, in_latlon=False):
+    """
+    Computes (spherical) distance between UNITARY vectors X1 and X2
+    """
+    if in_latlon:
+        X1 = latlon_to_X(*X1)
+        X2 = latlon_to_X(*X2)
+    return np.arccos(X1.dot(X2)) * R
+
+
 class Icosahedron:
     def __init__(self, *args, **kwargs):
 
