@@ -95,6 +95,16 @@ class HexGrid(Icosahedron):
 
         return eq_r
 
+    def compute_n_for_height(self, h):
+        """
+        Computes n (the number of hexes an edge of a face goes through),
+        so that the average height of hexagon tiles is h (in kilometers)
+        """
+        h_area = 2 * h**2 * np.sqrt(3)
+        nb_h = (4 * np.pi * R**2) / h_area
+
+        return int(np.round(np.sqrt(nb_h / 10) - 1))
+
     def compute_height_for_n(self, n):
         """
         Returns the approximative height of hexes in a grid of resolution n+1
@@ -658,7 +668,7 @@ if __name__ == "__main__":
     hexgrid = HexGrid()
     n = hexgrid.compute_n_for_radius(0.25)
 
-    from src.hexasphere.projection import SnyderEAProj
+    from hexasphere.projection import SnyderEAProj
 
     snyder_proj = SnyderEAProj(hexgrid)
     hexgrid.projection = snyder_proj

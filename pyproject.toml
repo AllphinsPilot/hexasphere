@@ -19,5 +19,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/AllphinsPilot/hexgrid"
-"Bug Tracker" = "https://github.com/AllphinsPilot/hexgrid/issues"
+"Homepage" = "https://github.com/AllphinsPilot/hexasphere"
+"Bug Tracker" = "https://github.com/AllphinsPilot/hexasphere/issues"
