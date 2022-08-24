@@ -1,2 +1,2 @@
 # hexgrid
-A module to create hexagonal grids on a sphere
+A module to create (almost) hexagonal grids on a sphere
