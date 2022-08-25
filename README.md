@@ -1,16 +1,6 @@
 # hexasphere
 A module to create (almost) hexagonal grids on a sphere
 
-## getting started
-
-1. Install the package with pip
-
-`$ pip install hexasphere`
-
-2. Import the library in python
-
-`from hexasphere import hexgrid, projection`
-
 ## description of the grid
 
 to be extended ...
@@ -34,7 +24,10 @@ This allows to cover the icosahedron. Its surface is then mapped to the sphere u
 ### projection
 
 There are two available projections in `projection` module:
-- `GnomonicProj`: a simple projection
+- `GnomonicProj`: a simple projection, which produces hexagonal tiles about 60% larger (in area) at the corners of a face than at its center.
+
+![Gnomonic](https://user-images.githubusercontent.com/70936497/186617448-b5ba845c-f2d5-42b2-b319-a594d2041905.png)
+*Principle of Gnomonic projection*
 
 - `SnyderEAProj`: a more complex projection, slower to compute (roughly 3x slower than Gnomonic projection), but which preserves areas. The implementation is based on [Brenton R S Recht's blog](https://brsr.github.io/2021/08/31/snyder-equal-area.html). See there for more details.
 
@@ -45,6 +38,16 @@ A tile identifier has the following pattern: `?XXXXX-YYYYY-ZZZZZ`
 - `XXXXX`, `YYYYY`, `ZZZZZ` are the integer coordinates of the tile in the triangular mesh covering face `?`. An useful property holds:
 
 `XXXXX + YYYYY + ZZZZZ = 2 * (n + 1)`
+
+## getting started
+
+1. Install the package with pip
+
+`$ pip install hexasphere`
+
+2. Import the library in python
+
+`from hexasphere import hexgrid, projection`
 
 ## usage
 
