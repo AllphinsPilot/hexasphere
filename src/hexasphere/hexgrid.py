@@ -176,7 +176,7 @@ class HexGrid(Icosahedron):
                 hexagon = Hexagon(self, str_id=hexagon)
             else:
                 hexagon = Hexagon(self, str_id=hexagon, res=n + 1)
-        X = self.projection.inv_project(hexagon.get_P(), hexagon.face)
+        X = self.projection.inv_project(hexagon.P, hexagon.face)
         return X_to_latlon(X)
 
 
@@ -260,7 +260,7 @@ class Hexagon:
         self.face = face
         self.pos = pos
 
-        self.P = None
+        self._P = None
 
     def from_str_id(self, str_id):
         """
@@ -281,16 +281,18 @@ class Hexagon:
     def __str__(self):
         return str(self.face) + " " + str(self.pos) + " / n = " + str(self.n)
 
-    def get_P(self):
+    @property
+    def P(self):
         """
         P represents the coordinates of the hex center
         in the face coordinate system
         """
-        self.P = (
-            2 * np.sqrt(3) * self.grid.Bis.dot(np.array(self.pos))
-            / (3 * (self.n + 1))
-        )
-        return self.P
+        if self._P is None:
+            self._P = (
+                2 * np.sqrt(3) * self.grid.Bis.dot(np.array(self.pos))
+                / (3 * (self.n + 1))
+            )
+        return self._P
 
     def resolve_conflicts(self, face, pos):
         """

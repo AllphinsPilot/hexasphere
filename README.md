@@ -31,6 +31,13 @@ This allows to cover the icosahedron. Its surface is then mapped to the sphere u
 ![icogrid](https://user-images.githubusercontent.com/70936497/186472661-e6255c76-46ae-4ce8-9b13-32c0683ee48b.jpeg)
 *Here, `n = 7`*
 
+### projection
+
+There are two available projections in `projection` module:
+- `GnomonicProj`: a simple projection
+
+- `SnyderEAProj`: a more complex projection, slower to compute (roughly 3x slower than Gnomonic projection), but which preserves areas. The implementation is based on [Brenton R S Recht's blog](https://brsr.github.io/2021/08/31/snyder-equal-area.html). See there for more details.
+
 ### hexagon tile identifier
 
 A tile identifier has the following pattern: `?XXXXX-YYYYY-ZZZZZ`
@@ -50,8 +57,6 @@ A tile identifier has the following pattern: `?XXXXX-YYYYY-ZZZZZ`
 2. Instantiate a projection system `Projection` associated with this grid:
 
 `my_projection = projection.MyProjection(my_grid)`
-
-*The two projection systems available in `projection` are `GnomonicProj()` and `SnyderEAProj()`*
 
 3. Provide the projection system to the grid:
 
