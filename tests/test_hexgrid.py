@@ -1,9 +1,8 @@
 import numpy as np
+from unittest import TestCase
 
 from src.hexasphere import hexgrid, projection
 from src.hexasphere.geometry import X_to_latlon, phi
-
-from unittest import TestCase
 
 
 Xs = [
