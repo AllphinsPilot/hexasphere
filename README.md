@@ -3,8 +3,6 @@ A module to create (almost) hexagonal grids on a sphere
 
 ## description of the grid
 
-to be extended ...
-
 ### base polyhedron
 
 The grid is built by subdividing a base polyhedron into hexagon tiles.
@@ -38,6 +36,8 @@ A tile identifier has the following pattern: `?XXXXX-YYYYY-ZZZZZ`
 - `XXXXX`, `YYYYY`, `ZZZZZ` are the integer coordinates of the tile in the triangular mesh covering face `?`. An useful property holds:
 
 `XXXXX + YYYYY + ZZZZZ = 2 * (n + 1)`
+
+---
 
 ## getting started
 
@@ -88,7 +88,7 @@ my_grid.compute_side_for_n(n)
 - To find the string identifier of the hexagon to which a geographic point `(lat, lon)` belongs, call:
 
 ```
-hex_identifier = my_grid.latlon_to_hex(lat, lon, n, out_str=True)
+hex_identifier = my_grid.latlon_to_hex(lat, lon, n, out_str=True)[0]
 ```
 
 - To find the `(lat, lon)` coordinates of the center of an hex, call:
@@ -96,4 +96,19 @@ hex_identifier = my_grid.latlon_to_hex(lat, lon, n, out_str=True)
 ```
 my_grid.hex_to_latlon(hex_identifier, in_str=True)
 my_grid.hex_to_latlon(hex_identifier, n, in_str=True) # n is here not required
+```
+
+### retrieving shape data
+
+One can also deal with an `Hexagon` object instead of an hexagon string identifier:
+
+```
+hex_object = my_grid.latlon_to_hex(lat, lon, n)[0]
+hex_object = hexgrid.Hexagon(my_grid, str_id=hexagon_identifier)
+```
+
+The coordinates of the vertices of the corresponding shape can then be retrieved:
+
+```
+shape_coordinates = hex_object.retrieve_polygon(out_latlon=True)
 ```
