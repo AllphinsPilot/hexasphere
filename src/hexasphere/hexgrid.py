@@ -422,6 +422,21 @@ class Hexagon:
             solve_conflicts=True
         )
 
+    def k_ring(self, k, out_str=False):
+
+        res = []
+
+        for x in range(-k, k+1):
+            for y in range(-k, k+1):
+                for z in range(-k, k+1):
+                    if x + y + z == 0:
+                        res.append(self.compute_neighbor((x, y, z)))
+
+        if out_str:
+            return [h.to_str_id() for h in res]
+        else:
+            return res
+
     def effective_radius(self):
         """
         Returns the average distance between the vertices of hex and its center
