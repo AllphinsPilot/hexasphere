@@ -110,6 +110,8 @@ The method `grid.latlon_to_hex` returns the list of distinct hexes a point of co
 hexes_identifier = my_grid.latlon_to_hex(lat, lon, n, out_str=True)
 ```
 
+<img width="634" alt="Screenshot 2022-09-13 at 12 09 33" src="https://user-images.githubusercontent.com/70936497/189876027-fc9e3867-613d-41b5-beb0-5b28f9e0117d.png">
+
 ### playing with hexagons
 
 #### retrieving shape data
