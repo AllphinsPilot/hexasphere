@@ -1,5 +1,5 @@
 # hexasphere
-A module to create (almost) hexagonal grids on a sphere
+A module to create (almost) hexagonal grids of variable size on a sphere, fully implemented in python.
 
 ## description of the grid
 
@@ -23,9 +23,6 @@ This allows to cover the icosahedron. Its surface is then mapped to the sphere u
 
 There are two available projections in `projection` module:
 - `GnomonicProj`: a simple projection, which produces hexagonal tiles about 60% larger (in area) at the corners of a face than at its center.
-
-![Gnomonic](https://user-images.githubusercontent.com/70936497/186617448-b5ba845c-f2d5-42b2-b319-a594d2041905.png)
-*Principle of Gnomonic projection*
 
 - `SnyderEAProj`: a more complex projection, slower to compute (roughly 3x slower than Gnomonic projection), but which preserves areas. The implementation is based on [Brenton R S Recht's blog](https://brsr.github.io/2021/08/31/snyder-equal-area.html). See there for more details.
 
@@ -98,7 +95,24 @@ my_grid.hex_to_latlon(hex_identifier, in_str=True)
 my_grid.hex_to_latlon(hex_identifier, n, in_str=True) # n is here not required
 ```
 
-### retrieving shape data
+### overlapping grids
+
+`grid.latlon_to_hex` also supports overlapping grids:
+
+```
+value = 12 # Overlap distance (in km)
+my_grid.set_overlap(value)
+```
+
+The method `grid.latlon_to_hex` returns the list of distinct hexes a point of coordinates `(lat, lon)` belongs to:
+
+```
+hexes_identifier = my_grid.latlon_to_hex(lat, lon, n, out_str=True)
+```
+
+### playing with hexagons
+
+#### retrieving shape data
 
 One can also deal with an `Hexagon` object instead of an hexagon string identifier:
 
@@ -111,4 +125,18 @@ The coordinates of the vertices of the corresponding shape can then be retrieved
 
 ```
 shape_coordinates = hex_object.retrieve_polygon(out_latlon=True)
+```
+
+#### moving on the grid
+
+To retrieve a neighboring hex:
+
+```
+hex_neighbor = hex_object.compute_neighbor(dP=(0, 1, -1))
+```
+
+To retrieve the list of hexes in the k-ring centered on the hex object:
+
+```
+hexes = hex_object.k_ring(k, out_str=True)
 ```

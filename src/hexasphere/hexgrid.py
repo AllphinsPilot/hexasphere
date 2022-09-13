@@ -6,21 +6,25 @@ from hexasphere.geometry import compute_dist, X_to_latlon, latlon_to_X
 
 
 class HexGrid(Icosahedron):
-    def __init__(self, face_A=None, overlap: float = 0):
+    def __init__(self, face_A=None):
         """
         ### Parameters
 
         - face_A, optional : np.array, shape = (3, 3), dtype = float
 
         Orthogonal coordinates of the three vertices of face_A
-
-        - overlap : float
-
-        A positive overlap value (in km) will give a grid
-        where hexes overlap over the given distance
         """
         super().__init__(face_A)
 
+        self.overlap = 0
+        self.margin = 0
+
+    def set_overlap(self, overlap: float):
+        """
+        A positive overlap value (in km) will give a grid
+        where hexes overlap over the given distance
+        Only affects method `self.latlon_to_hex`.
+        """
         self.overlap = overlap
         self.margin = (
             0.5 * overlap * np.sqrt(
@@ -584,7 +588,7 @@ class Location:
         self.face = np.argmax(self.grid.k.dot(self.X))
         self.P = self.grid.projection.project(self.X, self.face)
 
-    def find_pos_from_P_TrB(self, P_TrB, n):
+    def find_pos_from_P_TrB(self, face, P_TrB, n):
         """
         Finds the hex pos (a, b, c) of a point P converted into triangular
         coordinates P_TrB (orthogonal projection on sides of the face triangle)
@@ -602,9 +606,9 @@ class Location:
         c = N + 1 - (a + b)
 
         if a < 0 or b < 0 or c < 0 or a > n + 1 or b > n + 1 or c > n + 1:
-            raise ValueError("Projected point outside of face")
+            return self.grid.rectify_coordinates(face, (a, b, c), n)
 
-        return (a, b, c)
+        return face, (a, b, c)
 
     def find_hex(self, n, out_str=False):
         """
@@ -616,35 +620,35 @@ class Location:
         x, y, z = x + 1, y + 1, z + 1
 
         if margin > 0:
-            s = set()
+            res = set()
+
+            res.add(self.find_pos_from_P_TrB(self.face, (x, y, z), n))
 
             for j in [-margin, margin]:
-                s.add(self.find_pos_from_P_TrB((x + j, y, z), n))
-                s.add(self.find_pos_from_P_TrB((x, y + j, z), n))
-                s.add(self.find_pos_from_P_TrB((x, y, z + j), n))
-
-            res = list(s)
+                res.add(self.find_pos_from_P_TrB(self.face, (x + j, y - 0.5*j, z - 0.5*j), n))
+                res.add(self.find_pos_from_P_TrB(self.face, (x - 0.5*j, y + j, z - 0.5*j), n))
+                res.add(self.find_pos_from_P_TrB(self.face, (x - 0.5*j, y - 0.5*j, z + j), n))
 
         else:
-            res = [self.find_pos_from_P_TrB((x, y, z), n)]
+            res = [self.find_pos_from_P_TrB(self.face, (x, y, z), n)]
 
         if out_str:
             return [
                 Hexagon(
-                    self.grid, self.face, pos, res=n + 1, solve_conflicts=True
+                    self.grid, face, pos, res=n + 1, solve_conflicts=True
                 ).to_str_id()
-                for pos in res
+                for face, pos in res
             ]
         else:
             return [
                 Hexagon(
                     self.grid,
-                    self.face,
+                    face,
                     pos,
                     res=n + 1,
                     solve_conflicts=True
                 )
-                for pos in res
+                for face, pos in res
             ]
 
 
